@@ -44,6 +44,9 @@ Meteor.methods({
 			attachment.image_url = fileUrl;
 			attachment.image_type = file.type;
 			attachment.image_size = file.size;
+			if (file.identify) {
+				attachment.image_orientation = file.identify.orientation;
+			}
 			if (file.identify && file.identify.size) {
 				attachment.image_dimensions = file.identify.size;
 			}
@@ -53,6 +56,7 @@ Meteor.methods({
 				delete attachment.image_url;
 				delete attachment.image_type;
 				delete attachment.image_size;
+				delete attachment.image_orientation;
 				delete attachment.image_dimensions;
 			}
 		} else if (/^audio\/.+/.test(file.type)) {

@@ -41,6 +41,13 @@ Template.messageAttachment.helpers({
 	getImageHeight(height = 200) {
 		return height;
 	},
+	getImageOrientation(rotate = 1) {
+		var validExif = [1, 2, 3, 4, 5, 6, 7, 8];
+		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/) || validExif.indexOf(rotate) === -1){
+			rotate = 1;
+		}
+		return rotate;
+	},
 	color() {
 		return colors[this.color] || this.color;
 	},

@@ -41,6 +41,7 @@ Meteor.methods({
 			attachment.image_url = fileUrl;
 			attachment.image_type = file.type;
 			attachment.image_size = file.size;
+			attachment.image_orientation = file.orientation;
 			if (file.identify && file.identify.size) {
 				attachment.image_dimensions = file.identify.size;
 			}

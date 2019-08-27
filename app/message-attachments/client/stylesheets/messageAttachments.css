@@ -80,11 +80,40 @@ html.rtl .attachment {
 	}
 
 	& .attachment-image {
+
 		margin-top: 4px;
 
 		line-height: 0;
 
-		image-orientation: from-image;
+		&.inline-image {
+			display: table;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+		& FIGURE {
+			&.exif-rotate5,
+			&.exif-rotate6,
+			&.exif-rotate7,
+			&.exif-rotate8 {
+				padding: 50% 0;
+
+				height: 0;
+
+				& IMG {
+					margin-top: -50%;
+					max-width: 200px;
+					width:200px;
+					max-height: inherit;
+					height: auto;
+				}
+			}
+
+			& IMG {
+				display: block;
+				max-width: inherit;
+
+			}
+		}
 	}
 
 	& .attachment-fields {
@@ -161,4 +190,39 @@ html.rtl .attachment {
 	& .actions-container {
 		margin-top: 6px;
 	}
+}
+
+.exif-rotate1 IMG {
+}
+
+.exif-rotate2 IMG {
+	transform: rotateY(180deg);
+}
+
+.exif-rotate3 IMG {
+	transform: rotate(180deg);
+}
+
+.exif-rotate4 IMG {
+	transform: rotate(180deg) rotateY(180deg);
+}
+
+.exif-rotate5 IMG {
+	transform: rotate(270deg) rotateY(180deg);
+	transform-origin: top left;
+}
+
+.exif-rotate6 IMG {
+	transform: translateY(-100%) rotate(90deg);
+	transform-origin: bottom left;
+}
+
+.exif-rotate7 IMG {
+	transform: translateY(-100%) translateX(-100%) rotate(90deg) rotateY(180deg);
+	transform-origin: bottom right;
+}
+
+.exif-rotate8 IMG,.exif-rotate8 .pswp__img--placeholder {
+	transform: translateX(-100%) rotate(270deg);
+	transform-origin: top right;
 }

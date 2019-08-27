@@ -3,6 +3,7 @@ import { Tracker } from 'meteor/tracker';
 import { Session } from 'meteor/session';
 import s from 'underscore.string';
 import { Handlebars } from 'meteor/ui';
+import EXIF from 'exif-js';
 
 import { fileUploadHandler } from '../../../file-upload';
 import { t, fileUploadIsValidContentType } from '../../../utils';
@@ -132,6 +133,35 @@ const getUploadPreview = async (file, preview) => {
 	});
 
 	if (file.type === 'image' && await isImageFormatSupported()) {
+		const imgelement = document.createElement('img');
+		imgelement.src = preview;
+		EXIF.getData(imgelement, function() {
+			var srcOrientation = EXIF.getTag(this, "Orientation");
+			var width = imgelement.width,
+			height = imgelement.height,
+			canvas = document.createElement('canvas'),
+			ctx = canvas.getContext("2d");
+
+			if (4 < srcOrientation && srcOrientation < 9) {
+				canvas.width = height;
+				canvas.height = width;
+			} else {
+				canvas.width = width;
+				canvas.height = height;
+			}
+			switch (srcOrientation) {
+				case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
+				case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
+				case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
+				case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+				case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
+				case 7: ctx.transform(0, -1, -1, 0, height, width); break;
+				case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
+				default: break;
+			}
+			ctx.drawImage(imgelement, 0, 0);
+			preview = canvas.toDataURL();
+		});
 		return getImageUploadPreview(file, preview);
 	}
 

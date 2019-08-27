@@ -3,6 +3,7 @@ import PhotoSwipe from 'photoswipe';
 import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default';
 import 'photoswipe/dist/photoswipe.css';
 import s from 'underscore.string';
+import EXIF from 'exif-js';
 
 Meteor.startup(() => {
 	let currentGallery = null;
@@ -12,6 +13,12 @@ Meteor.startup(() => {
 			currentGallery.listen('destroy', () => {
 				currentGallery = null;
 			});
+			currentGallery.listen('parseVerticalMargin', function(item) {
+				if (item.container.className.indexOf('exif-rotate') == -1){
+					item.container.className += ' exif-rotate' + item.orientation;
+				}
+			});
+
 			currentGallery.init();
 		}
 	};
@@ -53,13 +60,17 @@ Meteor.startup(() => {
 						if (!currentGallery) {
 							return;
 						}
-
-						delete currentGallery.items[i].html;
-						currentGallery.items[i].src = img.src;
-						currentGallery.items[i].w = img.naturalWidth;
-						currentGallery.items[i].h = img.naturalHeight;
-						currentGallery.invalidateCurrItems();
-						currentGallery.updateSize(true);
+						EXIF.getData(img, function() {
+							delete currentGallery.items[i].html;
+							currentGallery.items[i].src = img.src;
+							var srcOrientation = EXIF.getTag(this, "Orientation");
+							currentGallery.items[i].orientation = parseInt(srcOrientation);
+							currentGallery.items[i].w = img.naturalWidth;
+							currentGallery.items[i].h = img.naturalHeight;
+							currentGallery.items[i].index = i;
+							currentGallery.invalidateCurrItems();
+							currentGallery.updateSize(true);
+						});
 					});
 
 					img.src = element.dataset.src || element.href;
@@ -70,11 +81,15 @@ Meteor.startup(() => {
 						description: element.dataset.description,
 					};
 				}
+				width = element.naturalWidth;
+				height = element.naturalHeight;
 
 				return {
 					src: element.src,
-					w: element.naturalWidth,
-					h: element.naturalHeight,
+					w: width,
+					h: height,
+					index: i,
+					orientation: parseInt(element.parentElement.dataset.orientation),
 					title: element.dataset.title || element.title,
 					description: element.dataset.description,
 				};

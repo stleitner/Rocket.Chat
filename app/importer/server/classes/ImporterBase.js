@@ -400,6 +400,7 @@ export class Base {
 							attachment.image_type = file.type;
 							attachment.image_size = file.size;
 							attachment.image_dimensions = file.identify != null ? file.identify.size : undefined;
+							attachment.image_orientation = file.identify.orientation;
 						}
 
 						if (/^audio\/.+/.test(file.type)) {

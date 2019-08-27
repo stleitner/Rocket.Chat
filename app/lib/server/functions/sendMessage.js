@@ -92,6 +92,7 @@ const validateAttachment = (attachment) => {
 		image_url: ValidLinkParam,
 		image_preview: String,
 		image_type: String,
+		image_orientation: Number,
 		image_size: Number,
 		audio_url: ValidLinkParam,
 		audio_type: String,

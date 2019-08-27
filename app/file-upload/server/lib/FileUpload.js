@@ -237,6 +237,7 @@ export const FileUpload = {
 
 			const identify = {
 				format: metadata.format,
+				orientation: metadata.orientation,
 				size: {
 					width: metadata.width,
 					height: metadata.height,
@@ -244,21 +245,7 @@ export const FileUpload = {
 			};
 
 			const reorientation = (cb) => {
-				if (!metadata.orientation || metadata.orientation === 1 || settings.get('FileUpload_RotateImages') !== true) {
-					return cb();
-				}
-				s.rotate()
-					.toFile(`${ tmpFile }.tmp`)
-					.then(Meteor.bindEnvironment(() => {
-						fs.unlink(tmpFile, Meteor.bindEnvironment(() => {
-							fs.rename(`${ tmpFile }.tmp`, tmpFile, Meteor.bindEnvironment(() => {
-								cb();
-							}));
-						}));
-					})).catch((err) => {
-						console.error(err);
-						fut.return();
-					});
+				return cb();
 			};
 
 			reorientation(() => {

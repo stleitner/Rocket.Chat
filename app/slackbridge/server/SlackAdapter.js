@@ -1050,6 +1050,7 @@ export default class SlackAdapter {
 						attachment.image_type = file.type;
 						attachment.image_size = file.size;
 						attachment.image_dimensions = file.identify && file.identify.size;
+						attachment.image_orientation = file.image_exif_rotation;
 					}
 					if (/^audio\/.+/.test(file.type)) {
 						attachment.audio_url = url;

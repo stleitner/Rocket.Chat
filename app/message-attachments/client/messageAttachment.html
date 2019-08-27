@@ -90,7 +90,7 @@
 				{{#unless mediaCollapsed}}
 					<div class="attachment-image inline-image">
 					{{#if loadImage}}
-						<figure>
+						<figure class="exif-rotate{{getImageOrientation image_orientation}}" data-orientation="{{getImageOrientation image_orientation}}">
 							{{> lazyloadImage src=(getURL image_url) preview=image_preview height=(getImageHeight image_dimensions.height) class="gallery-item" title=title description=description}}
 							{{#if labels}}
 								<div class="image-labels">
